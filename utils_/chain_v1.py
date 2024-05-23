@@ -1,8 +1,3 @@
-# document를 받기 전 prompt engineering만 진행한 코드
-
-from dotenv import load_dotenv
-load_dotenv()  # dotenv 파일에서 API KEY 불러오기
-
 from langchain.chat_models import ChatOpenAI
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 from langchain.prompts import ChatPromptTemplate, PromptTemplate, SystemMessagePromptTemplate, AIMessagePromptTemplate, HumanMessagePromptTemplate
@@ -14,6 +9,9 @@ from utils_.retriever import CustomRetriever_Faiss
 
 import warnings 
 warnings.filterwarnings("ignore")
+
+from dotenv import load_dotenv
+load_dotenv()  # dotenv 파일에서 API KEY 불러오기
 
 def get_response(query):
 

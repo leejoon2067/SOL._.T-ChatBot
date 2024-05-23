@@ -1,36 +1,29 @@
 from langchain.text_splitter import CharacterTextSplitter
-from langchain.embeddings import HuggingFaceEmbeddings
+from langchain.embeddings import HuggingFaceEmbeddings, OpenAIEmbeddings
+from langchain.docstore.document import Document
+
 from langchain_community.vectorstores import Chroma
+from langchain_community.vectorstores import FAISS
 from langchain_community.retrievers import BM25Retriever
 from langchain.retrievers import EnsembleRetriever
+
 from langchain.chains import RetrievalQA
 from langchain.chat_models import ChatOpenAI
-import tiktoken
 from langchain_community.document_loaders.csv_loader import CSVLoader
+from sentence_transformers import SentenceTransformer
 
-import pandas as pd 
 import numpy as np
+import csv
 import faiss
+import tiktoken
+
 
 # 벡터스토어 db 인스턴스를 생성
-from langchain_community.vectorstores import FAISS
-from langchain_community.vectorstores.utils import DistanceStrategy
-from langchain_community.embeddings import HuggingFaceEmbeddings
 
-class CustomRetriever_Faiss:
-    def __init__(self):
+class TextEmbedding_Faiss:
+    def __init__(self, model_name = "jhgan/ko-sbert-nli"):
         # 텍스트 토큰으로 분할을 위한 초기화
-        self.tokenizer = tiktoken.get_encoding('cl100k_base')
-        self.model = "jhgan/ko-sbert-nli"
-        self.model_kwargs = {'device': 'cpu'}
-        self.encode_kwargs = {'normalize_embeddings': True}
-
-        self.hf = HuggingFaceEmbeddings(
-            model_name = self.model,
-            model_kwargs = self.model_kwargs,
-            encode_kwargs = self.encode_kwargs
-        )
-
+        self.model = SentenceTransformer(model_name)
     def tiktoken_len(self, text):
         """텍스트를 토큰으로 변환 후 길이를 반환하는 함수"""
         tokens = self.tokenizer.encode(text)
@@ -52,31 +45,69 @@ class CustomRetriever_Faiss:
         return texts
     
     def get_text_embeddings(self, texts):
-        embeddings = self.hf.embed_documents(texts)
+        embeddings = self.model.encode(texts)
         return np.array(embeddings)
     
-    def create_faiss_index_and_search(self, embeddings, k = 5):
-        dim = embeddings.shape[1]
-        self.index = faiss.IndexFlatL2(dim)
-        self.index.add(np.array(embeddings, dtype = np.float32))
+    def create_faiss_index(self, embeddings, k):
+        # FAISS 인덱스 생성 및 벡터 추가
+        dimension = embeddings.shape[1]
+        self.index = faiss.IndexFlatL2(dimension)
+        self.index.add(embeddings)
 
-        nearest_neighbors = []
-        for i in range(embeddings.shape[0]):
-            D, I = self.index.search(np.expand_dims(embeddings[i], axis=0), k + 1)
-            neighbors = I[0][1:k+1]  # 자기 자신 제외
-            distances = D[0][1:k+1]
-            nearest_neighbors.append((neighbors, distances))
+class Customdb_Chroma:
+    def __init__(self):
+        self.user_input = None
+        self.hf = HuggingFaceEmbeddings()
+        self.sentences = TextEmbedding_Faiss.text_split(file)
 
-        return nearest_neighbors
+    def create_db(self, csv_path):
+        sentence_texts = []
+        with open(csv_path, new_line ='', encoding = 'utf-8') as csvfile:
+            reader = csv.reader(csvfile)
+            for row in reader:
+                self.sentence_texts.append(row[1])
+       
+        sentence_embeddings = self.hf.embed_documents(sentence_texts)
+        documents = [Document(page_content=text) for text in sentence_texts]
+        self.db = Chroma.from_documents(documents, self.hf, persist_directory= "./chroma_db")
 
+    def input_db(self, user_input):
+        self.user_input = user_input
+        query_embedding = self.hf.embed_documents([user_input])[0]
+
+        db3 = Chroma(persist_directory="./chroma_db", embedding_function= self.hf)
+        
+        return db3.similarity_search(user_input, k =1)
+        
+    def retrieve_most_similar_sentence(doc):
+        if doc:
+            most_similar_doc = doc[0]
+            return most_similar_doc.page_content
+        else:
+            return None
+    
     def create_retriever(self, file_path):
-        """텍스트 파일을 로드하고 리트리버를 생성하는 함수"""
-        texts = self.text_split(file_path)
-        embeddings = self.get_text_embeddings(texts)
-        # nearest_neighbors = self.create_faiss_index_and_search(embeddings)
+        db = Customdb_Chroma.create_db(file_path)
+        embedding = OpenAIEmbeddings()
+        retriever = db.as_retriever()
 
-        vectorestore = FAISS.from_texts(texts, embeddings)
-        faiss_retriever = vectorestore.as_retriever(search_k = 20, k = 1)
+        bm25_retriever = BM25Retriever.from_texts(
+            self.sentences
+        )
+        faiss_vectorstore = FAISS.from_texts(
+            self.sentences,
+            embedding
+        )
+        faiss_retriever = faiss_vectorstore.as_retriever(
+            search_k = 20,
+            k = 1
+        )
 
-        return faiss_retriever
+        ensemble_retriever = EnsembleRetriever(
+            retrievers=[bm25_retriever, faiss_retriever],
+            search_type = "mmr"
+        )
 
+        # ensemble_result = ensemble_retriever.get_relevant_documents(user_input)
+        # return ensemble_result
+        return ensemble_retriever

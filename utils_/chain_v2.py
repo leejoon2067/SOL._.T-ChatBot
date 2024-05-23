@@ -1,18 +1,20 @@
 # document, retriever 받은 후 수정할 code
 
-from dotenv import load_dotenv
-load_dotenv()  # dotenv 파일에서 API KEY 불러오기
-
 from langchain.chat_models import ChatOpenAI
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
-from langchain.schema import AIMessage, HumanMessage, SystemMessage
-from langchain.prompts import ChatPromptTemplate, PromptTemplate, SystemMessagePromptTemplate, AIMessagePromptTemplate, HumanMessagePromptTemplate
+# from langchain.schema import AIMessage, HumanMessage, SystemMessage
+from langchain.prompts import ChatPromptTemplate, SystemMessagePromptTemplate, HumanMessagePromptTemplate
 from langchain.chains import RetrievalQA, LLMChain
 
-from utils_.retriever import CustomRetriever_Faiss
+from utils_.retriever import TextEmbedding_Faiss, Customdb_Chroma
 from langchain_core.runnables import RunnablePassthrough
 from langchain_core.output_parsers import StrOutputParser
 
+import warnings 
+warnings.filterwarnings("ignore")
+
+from dotenv import load_dotenv
+load_dotenv()  # dotenv 파일에서 API KEY 불러오기
 
 # 사용자 입력을 받습니다.
 def get_response2(query):
@@ -55,10 +57,18 @@ def get_response2(query):
     # formatted_messages = chat_prompt.format_messages(situation=query)
 
     # Retrieval 체인을 구성하여 프롬프트와 모델을 묶기
-    custom_retriever = CustomRetriever_Faiss()
-    retriever = custom_retriever.create_retriever(r'data/filtered_emotion.csv')
+    faiss_embed = TextEmbedding_Faiss()    
+    csv_path = r'data/filtered_emotion.csv'
+
+    texts = faiss_embed.text_split(csv_path)
+    embeddings = faiss_embed.get_text_embeddings(texts)
+
+    db3 = Customdb_Chroma.create_db(csv_path)
+    ### 여기서부터 수정    
+
+    retriever = Customdb_Chroma.create_retriever(csv_path)
     
-    qa_chain = RetrievalQA(
+    qa_chain = RetrievalQA.from_chain_type(
         llm = chat_model,
         prompt = chat_prompt,
         retriever = retriever,

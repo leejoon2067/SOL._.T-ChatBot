@@ -1,6 +1,3 @@
-# from dotenv import load_dotenv
-# load_dotenv()  # dotenv 파일에서 API KEY 불러오기
-
 # from langchain.chat_models import ChatOpenAI
 # from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 # from langchain.prompts import ChatPromptTemplate, HumanMessagePromptTemplate, MessagesPlaceholder
@@ -13,6 +10,8 @@
 # from langchain_openai import OpenAI
 # from langchain.chains.question_answering import load_qa_chain
 
+# from dotenv import load_dotenv
+# load_dotenv()  # dotenv 파일에서 API KEY 불러오기
 
 # # 모델 불러오기
 # chat_model = OpenAI(
