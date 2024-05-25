@@ -2,10 +2,8 @@ from langchain.chat_models import ChatOpenAI
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 from langchain.prompts import ChatPromptTemplate, PromptTemplate, SystemMessagePromptTemplate, AIMessagePromptTemplate, HumanMessagePromptTemplate
 from langchain.chains import LLMChain
-from utils_.retriever import CustomRetriever_Faiss
-
-# from langchain.chains import ConversationChain
-# from langchain.memory import ConversationBufferMemory
+from utils_.retriever import TextEmbedding_Faiss
+from utils_.retriever import Customdb_Chroma
 
 import warnings 
 warnings.filterwarnings("ignore")
@@ -48,14 +46,14 @@ def get_response(query):
     # 이전 대화 기록 & 저장하는 buffer memory. -> 미구현
     # memory = ConversationBufferMemory(return_messages = True)
     # memory.load_memory_variables({"siuation", "chat_history"})
-    custom_retriever = CustomRetriever_Faiss()
+
     # retriever = custom_retriever.create_retriever(r'data/filtered_emotion.csv')
 
     # LLMChain 생성 
     chain = LLMChain(
         llm=chat_model,
         prompt=chat_prompt,
-        # retriever = retriever,
+        # retriever = custom_retriever,
     )
 
     # 질의에 대한 응답 생성 - ver1 (LLMChain)
