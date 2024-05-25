@@ -18,16 +18,13 @@ import faiss
 import tiktoken
 
 
-# 벡터스토어 db 인스턴스를 생성
+# 벡터스토어 db 인스턴스 생성
 
 class TextEmbedding_Faiss:
     def __init__(self, model_name = "jhgan/ko-sbert-nli"):
         # 텍스트 토큰으로 분할을 위한 초기화
         self.model = SentenceTransformer(model_name)
-    def tiktoken_len(self, text):
-        """텍스트를 토큰으로 변환 후 길이를 반환하는 함수"""
-        tokens = self.tokenizer.encode(text)
-        return len(tokens)
+        self.index = None
     
     def text_split(self, file_path):
         with open(file_path, encoding = 'utf-8') as f:
@@ -48,7 +45,7 @@ class TextEmbedding_Faiss:
         embeddings = self.model.encode(texts)
         return np.array(embeddings)
     
-    def create_faiss_index(self, embeddings, k):
+    def create_faiss_index(self, embeddings):
         # FAISS 인덱스 생성 및 벡터 추가
         dimension = embeddings.shape[1]
         self.index = faiss.IndexFlatL2(dimension)
@@ -58,18 +55,19 @@ class Customdb_Chroma:
     def __init__(self):
         self.user_input = None
         self.hf = HuggingFaceEmbeddings()
-        self.sentences = TextEmbedding_Faiss.text_split(file)
 
     def create_db(self, csv_path):
         sentence_texts = []
         with open(csv_path, new_line ='', encoding = 'utf-8') as csvfile:
             reader = csv.reader(csvfile)
             for row in reader:
-                self.sentence_texts.append(row[1])
+                sentence_texts.append(row[1])
        
         sentence_embeddings = self.hf.embed_documents(sentence_texts)
         documents = [Document(page_content=text) for text in sentence_texts]
         self.db = Chroma.from_documents(documents, self.hf, persist_directory= "./chroma_db")
+
+        return self.db
 
     def input_db(self, user_input):
         self.user_input = user_input
@@ -87,7 +85,7 @@ class Customdb_Chroma:
             return None
     
     def create_retriever(self, file_path):
-        db = Customdb_Chroma.create_db(file_path)
+        db = self.create_db(file_path)
         embedding = OpenAIEmbeddings()
         retriever = db.as_retriever()
 
@@ -102,12 +100,10 @@ class Customdb_Chroma:
             search_k = 20,
             k = 1
         )
-
         ensemble_retriever = EnsembleRetriever(
             retrievers=[bm25_retriever, faiss_retriever],
             search_type = "mmr"
         )
-
         # ensemble_result = ensemble_retriever.get_relevant_documents(user_input)
         # return ensemble_result
         return ensemble_retriever

@@ -1,3 +1,5 @@
+# ConversationChain 활용 chain 구조. -> 미구현
+
 # from langchain.chat_models import ChatOpenAI
 # from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 # from langchain.prompts import ChatPromptTemplate, HumanMessagePromptTemplate, MessagesPlaceholder
