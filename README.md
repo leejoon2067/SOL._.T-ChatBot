@@ -53,7 +53,8 @@
 |최소영| Vectorstore과 연결하여 Retriever Module 구조 완성 |
 |방채빈| LLM Prompt 정의 및 model과 Prompt 연결, Retriver-Chain 구조 완성 |
 
- 
+<br>
+
 ## 📑 참고 문헌
 [1] 선물 추천 챗봇 PresenTALK 개발기, https://github.com/mu0gum/nlp_research?tab=readme-ov-file
 
