@@ -23,7 +23,7 @@
 <br><br>
 
 ## 3️⃣ 챗봇 최종 아키텍처
-<img src = "https://github.com/leejoon2067/Chat-Bot_Sol-T/blob/main/data/img/SOL_T%20%EC%95%84%ED%82%A4%ED%85%8D%EC%B3%90.png" width = "500" height = "400"/>
+<img src = "https://github.com/leejoon2067/Chat-Bot_Sol-T/blob/main/data/img/SOL_T%20%EC%95%84%ED%82%A4%ED%85%8D%EC%B3%90.png" width = "500" height = "300"/>
 
 
 <br>
