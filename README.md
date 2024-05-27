@@ -60,14 +60,14 @@ SOL._.T 회의록 및 모델링 archive [Notion](https://simple-board-99d.notion
 <br><br>
 
 ## 📑 참고 문헌
-[1] 선물 추천 챗봇 PresenTALK 개발기, https://github.com/mu0gum/nlp_research?tab=readme-ov-file
+[1] [선물 추천 챗봇 PresenTALK 개발기](https://github.com/mu0gum/nlp_research?tab=readme-ov-file)
 
-[2] 자연어 처리_연애 상담 챗봇_프로젝트 (1), https://velog.io/@min0731/%EC%9E%90%EC%97%B0%EC%96%B4-%EC%B2%98%EB%A6%AC%EC%97%B0%EC%95%A0-%EC%83%81%EB%8B%B4-%EC%B1%97%EB%B4%87%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8-1
+[2] [자연어 처리_연애 상담 챗봇_프로젝트 (1)](https://velog.io/@min0731/%EC%9E%90%EC%97%B0%EC%96%B4-%EC%B2%98%EB%A6%AC%EC%97%B0%EC%95%A0-%EC%83%81%EB%8B%B4-%EC%B1%97%EB%B4%87%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8-1)
 
-[3] 혼자 힘으로 한국어 챗봇 개발하기, https://exagen.tistory.com/notice/63
+[3] [혼자 힘으로 한국어 챗봇 개발하기](https://exagen.tistory.com/notice/63)
 
-[4] KoELECTRA v3 (Base Discriminator), https://huggingface.co/monologg/koelectra-base-v3-discriminator 
+[4] [KoELECTRA v3 (Base Discriminator)](https://huggingface.co/monologg/koelectra-base-v3-discriminator)
 
-[5] Streamlit을 이용한 Chatbot 만들기 (Blenderbot, GPT-3), https://yunwoong.tistory.com/227
+[5] [Streamlit을 이용한 Chatbot 만들기 (Blenderbot, GPT-3)](https://yunwoong.tistory.com/227)
 
-[6] Using langchain for Question Answering on Own Data, https://medium.com/@onkarmishra/using-langchain-for-question-answering-on-own-data-3af0a82789ed
+[6] [Using langchain for Question Answering on Own Data](https://medium.com/@onkarmishra/using-langchain-for-question-answering-on-own-data-3af0a82789ed)
