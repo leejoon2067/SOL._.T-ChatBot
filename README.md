@@ -21,13 +21,15 @@
 
 <br>
 사용자가 채팅을 통해 자신의 상황을 충분히 설명하였다면, sol._.T는 문제 상황을 파악한 후 상대방의 입장에 공감하여 갈등을 해소할 수 있는 해결책을 제시해 준다. 만약 연인과 어떻게 대화를 이어나가야 할지 고민되는 상황에서는, 상황에 따라 메세지 예시를 추천해 주기도 한다. 
-<br><br>
+
+<br>
+<br>
 
 ## 3️⃣ 챗봇 최종 아키텍처
 <img src = "https://github.com/leejoon2067/Chat-Bot_Sol-T/blob/main/data/img/SOL_T%20%EC%95%84%ED%82%A4%ED%85%8D%EC%B3%90.png" width = "500" height = "280"/>
 1) CSV Loader -> 2) Text Split -> 3) Vectore Store DB(FAISS) -> 4) Retriever -> 6) LLM 
 
-<br>
+<br><br>
 
 ## 4️⃣ 활용 방안
 - **연애 고민 상담 & 조언 서비스**
