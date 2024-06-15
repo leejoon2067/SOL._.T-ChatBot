@@ -55,7 +55,8 @@
 |최소영| Vectorstore과 연결하여 Retriever Module 구조 완성 |
 |방채빈| LLM Prompt 정의 및 model과 Prompt 연결, Retriver-Chain 구조 완성 |
 
-SOL._.T 회의록 및 모델링 archive [Notion](https://simple-board-99d.notion.site/88e6854a57234b8b92e8c01e070115a4)
+- 🔤 NLP(Natural Language Processing) Track [Notion](https://simple-board-99d.notion.site/NLP-09f76e5ca2214aea89cac18073a46846)
+- 💞 SOL._.T archive [Notion](https://simple-board-99d.notion.site/88e6854a57234b8b92e8c01e070115a4)
 
 <br><br>
 
